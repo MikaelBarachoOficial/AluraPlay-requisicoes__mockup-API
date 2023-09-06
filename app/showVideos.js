@@ -1,6 +1,8 @@
 import { connectAPI } from "./connectAPI.js"
 
 const videosField = document.querySelector('[data-videos]');
+const searchField = document.querySelector('[data-searchField]')
+const searchBtn = document.querySelector('[data-searchBtn]')
 
 function createVideoCard(title, viewers, url, icon) {
 
@@ -21,15 +23,32 @@ function createVideoCard(title, viewers, url, icon) {
 
 }
 
-async function fillTheVideosField() {
-    let listAPI = await connectAPI.fetchVideoListAPI();
+async function fillTheVideosField(direction, searchFieldContent) {
 
-    console.log(listAPI)
+    videosField.innerHTML = ''
 
-    listAPI.forEach(video => {
-        videosField.appendChild(createVideoCard(video.titulo, video.descricao, video.url, video.imagem))
-    })
+    try {
 
-}
+        let listAPI = await direction
 
-fillTheVideosField()
+        if (listAPI.length > 0) {
+            listAPI.forEach(video => {
+                videosField.appendChild(createVideoCard(video.titulo, video.descricao, video.url, video.imagem))
+            })
+        } else {
+            videosField.innerHTML = `<h2 class="mensagem__titulo">Não foram encontrados resultados com ${searchFieldContent}.</h2>`
+        }
+    } catch (error) {
+        videosField.innerHTML = `<h2 class="mensagem__titulo">O servidor está fora do ar. Por favor, tente novamente mais tarde.</h2>`
+    }
+}       
+
+fillTheVideosField(connectAPI.fetchVideoListAPI())
+
+searchBtn.addEventListener('click', event => {
+    fillTheVideosField(connectAPI.searchVideo(searchField.value), searchField.value)
+})
+
+// async function fillWithSearchedVideos() {
+//     let listAPI = await connectAPI.fetch
+// }
