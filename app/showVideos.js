@@ -38,9 +38,11 @@ async function fillTheVideosField(direction, searchFieldContent) {
         } else {
             videosField.innerHTML = `<h2 class="mensagem__titulo">Não foram encontrados resultados com ${searchFieldContent}.</h2>`
         }
+        
     } catch (error) {
         videosField.innerHTML = `<h2 class="mensagem__titulo">O servidor está fora do ar. Por favor, tente novamente mais tarde.</h2>`
     }
+
 }       
 
 fillTheVideosField(connectAPI.fetchVideoListAPI())

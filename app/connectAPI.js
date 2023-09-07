@@ -11,6 +11,7 @@ async function fetchVideoListAPI() { // 'GET request'
 
 async function postVideo(title, viewers, url, logo) { // 'POST request'
 
+    try{
         const connection = await fetch('http://localhost:3000/videos', {
             method: "POST",                        // The 'method' property specifies that this is a 'POST request', which is used to send data to the server.
             headers: {                             // The 'headers' property specifies the type of content being sent in the requesty body.
@@ -24,9 +25,17 @@ async function postVideo(title, viewers, url, logo) { // 'POST request'
             })
         })
 
-        const connectionJSON = await connection.json()
-
-        return connectionJSON
+        if(!connection.ok) {
+            throw new Error('Não foi possivel adicionar o video.')
+        } else {
+            const connectionJSON = await connection.json()
+            return connectionJSON
+        }
+        
+    } catch(err) {
+        alert(err)
+        return false
+    }
 
 }
 
